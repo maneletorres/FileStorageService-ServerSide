@@ -11,25 +11,25 @@ import java.net.Socket;
 public class FileServer {
 
     public void listen() throws IOException {
-        System.out.println("Iniciant el servidor...");
+        System.out.println("Starting the server...");
 
         ServerSocket listener;
         int srvPort = 9889;
         try {
             listener = new ServerSocket(srvPort);
         } catch (IOException ex) {
-            System.out.println("El port " + srvPort + " està ocupat o és inaccessible.");
+            System.out.println("The port " + srvPort + " is busy or inaccessible. Exception: " + ex);
             return;
         }
 
         while (true) {
             Socket socket = listener.accept();
 
-            System.out.println("\nS'ha rebut una connexio. Atenent peticio...");
+            System.out.println("\nConnection received. Taking care of petition...");
 
             FileServerWorker fileServerWorker = new FileServerWorker(socket);
-            Thread generadorThread = new Thread(fileServerWorker);
-            generadorThread.start();
+            Thread threadGenerator = new Thread(fileServerWorker);
+            threadGenerator.start();
         }
     }
 

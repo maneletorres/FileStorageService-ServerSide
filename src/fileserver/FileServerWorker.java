@@ -29,51 +29,51 @@ public class FileServerWorker implements Runnable {
             OutputStream os = socket.getOutputStream();
             PrintWriter pw = new PrintWriter(os);
 
-            // Resposta al client:
+            // Response to the client:
             pw.println(message);
             pw.flush();
 
             pw.close();
             os.close();
         } catch (IOException ex) {
-            System.out.println("S'ha donat la següent excepció durant la connexió: " + ex.getMessage());
+            System.out.println("The following exception occurred while connecting: " + ex.getMessage());
         }
     }
 
     public String checkFile(String fileName) {
         File file = new File(filesPath + fileName);
         if (file.exists()) {
-            System.out.println("El fitxer " + fileName + " existeix al servidor.");
+            System.out.println("The file " + fileName + " exists on server.");
             return "true";
         } else {
-            System.out.println("El fitxer " + fileName + " no existeix al servidor.");
+            System.out.println("The file " + fileName + " does not exist on server.");
             return "false";
         }
     }
 
     public String listFilesForClient() {
-        // Ruta del fitxer/directori compartit:
+        // Path of the shared directory:
         File file = new File(filesPath);
 
         String result = "";
         if (file.exists()) {
             if (file.isDirectory()) {
-                File[] archivos = file.listFiles();
+                File[] files = file.listFiles();
 
-                result += "\n-------- LLISTA DE FITXERS: --------\n";
-                for (int i = 0; i < archivos.length; i++) {
-                    result += "Fitxer " + (i + 1) + " : " + archivos[i].getName();
-                    if (i != archivos.length - 1) {
+                result += "\n-------- FILE LIST: --------\n";
+                for (int i = 0; i < files.length; i++) {
+                    result += "File " + (i + 1) + " : " + files[i].getName();
+                    if (i != files.length - 1) {
                         result += "\n";
                     }
                 }
 
-                System.out.println("Llistant els fitxers...");
+                System.out.println("Listing the files...");
             } else {
-                result += "El fitxer compartit 'files' no pot ser llistat perqué no és un directori.";
+                result += "The file 'files' can not be listed because it is not a directory.";
             }
         } else {
-            result += "El fitxer compartit 'files' no pot ser llistat perqué no existeix.";
+            result += "The directory 'files' can not be listed because it does not exist.";
         }
 
         return result.trim();
@@ -84,7 +84,7 @@ public class FileServerWorker implements Runnable {
             FileInputStream fis = new FileInputStream(filesPath + fileName);
             OutputStream os = socket.getOutputStream();
 
-            System.out.println("Descarregant el fitxer " + fileName + "...");
+            System.out.println("Downloading the file " + fileName + "...");
             int bytes, bytesCopied = 0;
             do {
                 bytes = fis.read();
@@ -94,18 +94,18 @@ public class FileServerWorker implements Runnable {
                 }
 
             } while (bytes != -1);
-            System.out.println("El fitxer " + fileName + " ha sigut descarregat del servidor correctament. Bytes copiats: " + bytesCopied + ".");
+            System.out.println("The file " + fileName + "  has been downloaded successfully from the server. Copied bytes: " + bytesCopied + ".");
 
             os.close();
             fis.close();
         } catch (IOException ex) {
-            System.out.println("El fitxer " + fileName + " no s'ha pogut descarregar del servidor perqué s'ha donat la següent excepció: " + ex.getMessage());
+            System.out.println("The file " + fileName + " could not be downloaded from the server because the following exception was given: " + ex.getMessage());
         }
     }
 
     public void uploadFile(String fileName) {
         try {
-            // Alternativa 1 - Comentar / descomentar la part corresponent al client:
+            // Alternative 1 - Comment / uncomment the part corresponding to the client:
             InputStream is = socket.getInputStream();
             FileOutputStream fos = new FileOutputStream(filesPath + fileName);
 
@@ -117,12 +117,12 @@ public class FileServerWorker implements Runnable {
                     bytesCopied++;
                 }
             } while (bytes != -1);
-            System.out.println("El fitxer " + fileName + " ha sigut pujat al servidor. Bytes copiats: " + bytesCopied + ".");
+            System.out.println("The file " + fileName + " has been uploaded to the server. Copied bytes: " + bytesCopied + ".");
 
             fos.close();
             is.close();
 
-            // Alternativa 2 - Comentar / descomentar la part corresponent al client:
+            // Alternative 2 - Comment / uncomment the part corresponding to the client:
             /*int bytesRead;
 
             DataInputStream dis = new DataInputStream(socket.getInputStream());
@@ -136,12 +136,12 @@ public class FileServerWorker implements Runnable {
                 size -= bytesRead;
             }
 
-            System.out.println("El fitxer " + fileName + " ha sigut pujat al servidor.");
+            System.out.println("The file " + fileName + "  has been uploaded to the server.");
 
             os.close();
             dis.close();*/
         } catch (IOException ex) {
-            System.out.println("El fitxer " + fileName + " no s'ha pogut pujar al servidor perqué s'ha donat la següent excepció: " + ex.getMessage());
+            System.out.println("The file " + fileName + " could not be uploaded to the server because the following exception was given: " + ex.getMessage());
         }
     }
 
@@ -175,11 +175,11 @@ public class FileServerWorker implements Runnable {
                             downloadFile(messageSplitted[1]);
                             break;
                         default:
-                            System.out.println("S'ha introduït una opció incorrecta.");
+                            System.out.println("An incorrect option was entered.");
                     }
             }
         } catch (IOException ex) {
-            System.out.println("S'ha donat la següent excepció durant la connexió: " + ex.getMessage());
+            System.out.println("The following exception occurred while connecting: " + ex.getMessage());
         }
     }
 }
